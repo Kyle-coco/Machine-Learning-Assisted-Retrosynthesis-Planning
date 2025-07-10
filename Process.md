@@ -1,13 +1,20 @@
 
+----------
+
 # EditRetro：逆合成预测模型安装与使用指南
 
-这份指南将详细说明如何在本地环境（`D:\C\AI_Innovation_Practice\ZKD\Practice\yuqianghan-editretro-e954132`）中设置和运行 EditRetro 项目。
+本项目基于论文 **EditRetro: Edit-Based Retrosynthesis Prediction with Documented Edit Sequences**，提出了一种结合模板优势和神经网络能力的逆合成预测方法，广泛用于化学反应路径预测任务。
+
+ **代码来源：**  
+[https://zenodo.org/records/11483329](https://zenodo.org/records/11483329)
+
+----------
 
 ## 一、环境搭建
 
 ### 1. 创建并激活 Conda 环境
 
-首先，打开你的 Anaconda Prompt 或 CMD/PowerShell，然后按顺序执行以下命令：
+打开 Anaconda Prompt，依次执行以下命令：
 
 ```bash
 conda create -n editretro python=3.10.9
@@ -16,7 +23,7 @@ conda activate editretro
 
 ### 2. 安装 Python 依赖
 
-激活环境后，进入你的项目根目录，并安装 `requirements.txt` 中列出的所有依赖：
+进入项目根目录，并安装依赖项：
 
 ```bash
 cd D:\C\AI_Innovation_Practice\ZKD\Practice\yuqianghan-editretro-e954132
@@ -25,7 +32,7 @@ pip install -r requirements.txt
 
 ----------
 
-# requirements.txt 内容示例
+### ✅ `requirements.txt` 内容示例
 
 ```
 --extra-index-url https://download.pytorch.org/whl/cu116
@@ -39,101 +46,94 @@ tensorboard==2.15.1
 ```
 
 ----------
+
 ## 二、安装 Fairseq
 
-这是关键的一步。Fairseq 是 EditRetro 模型的基础。
+Fairseq 是 EditRetro 的核心依赖，需单独安装。
 
-### 1. 确保已安装 Ninja
+### 1. 安装 Ninja 工具
 
-Fairseq 的编译过程依赖 Ninja 工具。
+Fairseq 编译依赖 Ninja：
 
--   **Windows 用户安装 Ninja：**
+-   下载地址：[https://github.com/ninja-build/ninja/releases](https://github.com/ninja-build/ninja/releases)
     
-    -   你可以从 Ninja 的 [GitHub Release 页面](https://github.com/ninja-build/ninja/releases) 下载预编译的 Windows 版本（`ninja-win.zip`）。
-        
-    -   解压后，将包含 `ninja.exe` 的目录添加到你的系统环境变量 `Path` 中。
-        
-    -   或者你可以尝试使用 `conda install ninja` 或 `pip install ninja` 安装。
-        
--   **测试 Ninja 是否安装成功：**  
-    在命令行输入以下命令，确认能显示版本信息：
-   `ninja -v` 
+-   解压后将 `ninja.exe` 所在路径加入环境变量 `Path`
     
-### 2. 设置 CUDA_HOME 环境变量
+-   或直接安装：
+    
 
-建议在系统环境变量中设置 `CUDA_HOME`，指向你的 CUDA 安装路径。例如：
+```bash
+conda install ninja
+# 或
+pip install ninja
+```
 
-`CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6` 
+测试是否安装成功：
 
-你也可以临时在命令行中设置：
+```bash
+ninja -v
+```
 
-`set CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6` 
+### 2. 设置 CUDA_HOME 环境变量（如使用 GPU）
 
-----------
+可在系统环境变量中添加：
 
-### 3. 进入 fairseq 子目录安装 Fairseq
+```
+CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6
+```
 
-确保你当前位于 EditRetro 项目的根目录，然后进入 `fairseq` 文件夹执行安装：
+或在命令行中临时设置：
 
-`cd D:\C\AI_Innovation_Practice\ZKD\Practice\yuqianghan-editretro-e954132\fairseq`
+```bash
+set CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6
+```
 
-`pip install --editable ./` 
+### 3. 安装 Fairseq
+
+进入 `fairseq` 子目录执行安装：
+
+```bash
+cd D:\C\AI_Innovation_Practice\ZKD\Practice\yuqianghan-editretro-e954132\fairseq
+pip install --editable ./
+```
 
 ----------
 
 ## 三、常见问题及注意事项
 
-### 1. C++ 编译器缺失（`cl` 命令找不到）
+### 1. 未检测到 `cl.exe`（C++ 编译器）
 
-如果你遇到类似如下错误：
+若提示如下错误：
 
-`UserWarning:  Error checking compiler version for cl: [WinError 2] 系统找不到指定的文件。` 
+```
+UserWarning: Error checking compiler version for cl: [WinError 2] 系统找不到指定的文件。
+```
 
-这表示系统找不到 Microsoft Visual C++ 编译器 `cl.exe`。
+请安装 [Visual Studio Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) 并选择：
 
-**解决方案：**
-
--   安装 **Microsoft Visual Studio Build Tools**。
-    
--   在安装时，务必勾选“使用 C++ 的桌面开发”（Desktop development with C++）工作负载。
-    
--   下载安装链接：  
-    [Visual Studio 官方下载页面](https://visualstudio.microsoft.com/downloads/)  
-    找到“Tools for Visual Studio 2022”下的“Build Tools”。
-    
--   安装完成后，重启命令行窗口或电脑，确保环境变量生效。
+-    "使用 C++ 的桌面开发（Desktop development with C++）"
     
 
-----------
+完成后重启命令行即可。
 
-### 2. Ninja 工具必须正确安装并在 `PATH` 中
+### 2. Ninja 未添加至 PATH
 
-尽管报错可能指向编译器，但 Ninja 同样是编译过程中不可缺少的工具。
-
--   确认 Ninja 可以正常执行（见上文）。
-    
--   如果命令行找不到 Ninja，请检查是否正确将其路径添加到系统环境变量中。
--------------------------------------
-好的，我帮你整合这部分“二、数据预处理”内容，接在“常见问题及注意事项”之后，形成完整的 README 续写部分，如下：
+确保 `ninja.exe` 所在路径已加入环境变量，或使用 `pip/conda` 安装后能直接调用。
 
 ----------
 
 ## 四、数据预处理
 
-在训练模型之前，你需要准备好数据集。
-
 ### 1. 下载原始数据集
 
-从原始 README 中提供的链接下载 USPTO-50K 和 USPTO-FULL 数据集：
+从以下地址下载原始数据集：
 
--   **USPTO-50K:**  
-    [https://github.com/Hanjun-Dai/GLN](https://github.com/Hanjun-Dai/GLN) （查找 `schneider50k` 相关文件）
+-   **USPTO-50K**：[https://github.com/Hanjun-Dai/GLN](https://github.com/Hanjun-Dai/GLN)（查找 `schneider50k`）
     
--   **USPTO-FULL:**  
-    [https://github.com/Hanjun-Dai/GLN](https://github.com/Hanjun-Dai/GLN) （查找 `1976_Sep2016_USPTOgrants_smiles.rsmi` 或 `uspto_multi` 文件夹）
+-   **USPTO-FULL**：[https://github.com/Hanjun-Dai/GLN](https://github.com/Hanjun-Dai/GLN)（查找 `1976_Sep2016_USPTOgrants_smiles.rsmi` 或 `uspto_multi`）
     
 
-下载后，将这些原始数据集文件放入你的项目路径下的相应位置。例如，对于 USPTO-50K：
+将数据放置于如下路径示例：
 
 ```
 D:\C\AI_Innovation_Practice\ZKD\Practice\yuqianghan-editretro-e954132\datasets\USPTO_50K\raw
@@ -141,13 +141,7 @@ D:\C\AI_Innovation_Practice\ZKD\Practice\yuqianghan-editretro-e954132\datasets\U
 
 ### 2. 运行数据预处理脚本
 
-确保你当前位于 EditRetro 项目的根目录：
-
-```
-D:\C\AI_Innovation_Practice\ZKD\Practice\yuqianghan-editretro-e954132
-```
-
-然后执行以下命令来处理数据，处理后的数据将存储在 `datasets/XXX/aug` 文件夹中：
+在项目根目录下执行：
 
 ```bash
 python preprocess_data.py -dataset USPTO_50K -augmentation 1 -processes 4 -spe -dropout 0
@@ -155,13 +149,22 @@ python preprocess_data.py -dataset USPTO_50K -augmentation 1 -processes 4 -spe -
 python preprocess_data.py -dataset USPTO_FULL -augmentation 5 -processes 8 -spe -dropout 0
 ```
 
+预处理完成后，结果将保存至：
+
+```
+datasets/USPTO_50K/aug1/
+
+datasets/USPTO_FULL/aug5/
+```
+
 ### 3. 二值化数据
 
-最后，对处理后的数据进行二值化：
+执行以下命令进行二值化：
 
 ```bash
 sh binarize.sh ./datasets/USPTO_50K/aug1 dict.txt
 ```
 
-> **注意：** Windows 默认不直接支持 `sh` 脚本，你可能需要使用 Git Bash，或者将 `binarize.sh` 中的命令手动复制到 CMD/PowerShell 中执行。通常，它会涉及到 `fairseq-preprocess` 命令。
+>  **提示：** Windows 默认不支持 `.sh` 脚本，建议使用 [Git Bash](https://git-scm.com/) 运行，或手动复制脚本内容在 PowerShell 中执行（主要包含 `fairseq-preprocess` 命令）。
+
 ----------
