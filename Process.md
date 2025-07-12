@@ -173,7 +173,7 @@ sh binarize.sh ./datasets/USPTO_50K/aug1 dict.txt
 本项目包含 EditRetro 模型的预训练和微调流程。请确保你已准备好对应的数据集，并且当前路径位于项目根目录：
 
 ```
-D:\C\人工智能实践\中科大\Practice\yuqianghan-editretro-e954132
+D:\C\AI_Innovation_Practice\ZKD\Practice\yuqianghan-editretro-e954132\datasets\USPTO_50K\raw
 ```
 
 ----------
