@@ -366,7 +366,11 @@ fairseq-train \
   ${model_args} > ${model_dir}/finetune.log 2>&1
 
 ```
+我拿了微调三个不同阶段的训练结果，以此直观的展现了模型训练的好坏
+![微调训练结果图1]([https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/2db8eff780e8012ba53784e68d12646f058cd9b6/Model_Fine_Tuning.png](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/main/result_photo/Finetune3.png))
 
-![微调训练图](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/2db8eff780e8012ba53784e68d12646f058cd9b6/Model_Fine_Tuning.png)
+![微调训练结果图2]([https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/2db8eff780e8012ba53784e68d12646f058cd9b6/Model_Fine_Tuning.png](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/main/result_photo/Finetune2.png))
+
+![微调训练结果图3]([https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/2db8eff780e8012ba53784e68d12646f058cd9b6/Model_Fine_Tuning.png](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/main/result_photo/Finetune.png))
 
 ----------
