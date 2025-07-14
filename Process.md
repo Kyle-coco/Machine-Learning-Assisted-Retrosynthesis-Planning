@@ -306,6 +306,7 @@ fairseq-train \
 
 ```
 
+### 预训练结果图
 ![预训练结果图](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/main/result_photo/Pre-training.png)
 
 ----------
@@ -393,10 +394,13 @@ fairseq-train \
 
 下面是微调不同阶段训练结果的示意图：
 
+### 微调训练结果图1
 ![微调训练结果图1](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/5576662b50e79d536375b558d7d277b2b6c8af15/result_photo/Finetune3.png)
 
+### 微调训练结果图2
 ![微调训练结果图2](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/5576662b50e79d536375b558d7d277b2b6c8af15/result_photo/Finetune2.png)
 
+### 微调训练结果图3
 ![微调训练结果图3](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/5576662b50e79d536375b558d7d277b2b6c8af15/result_photo/Finetune.png)
 
 ----------
