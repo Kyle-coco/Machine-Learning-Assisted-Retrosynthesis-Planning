@@ -282,7 +282,7 @@ fairseq-train \
 
 ```
 
-![预训练结果图]([https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/2db8eff780e8012ba53784e68d12646f058cd9b6/Pre-training.png](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/main/result_photo/Pre-training.png))
+![预训练结果图]([[https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/2db8eff780e8012ba53784e68d12646f058cd9b6/Pre-training.png](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/main/result_photo/Pre-training.png)](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/5576662b50e79d536375b558d7d277b2b6c8af15/result_photo/Pre-training.png))
 
 ----------
 
