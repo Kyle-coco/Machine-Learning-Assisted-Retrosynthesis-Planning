@@ -293,35 +293,80 @@ fairseq-train \
 执行微调的命令：
 
 ```bash
-sh ./scripts/1_finetune.sh
+bash ./scripts/1_finetune.sh
 ```
 
-或者直接使用 `fairseq-train` 命令：
+脚本命令如下：
 
 ```bash
-fairseq-train data-bin/USPTO_50K_aug1 ^
-  --user-dir editretro ^
-  -s src -t tgt ^
-  --max-tokens 512 ^
-  --max-epoch 1 ^
-  --max-update 4000 ^
-  --save-interval-updates 1000 ^
-  --save-dir results/pretrain_quick ^
-  --optimizer adam ^
-  --lr 0.0005 ^
-  --lr-scheduler inverse_sqrt ^
-  --warmup-updates 100 ^
-  --clip-norm 1.0 ^
-  --dropout 0.1 ^
-  --weight-decay 0.0001 ^
-  --criterion label_smoothed_cross_entropy ^
-  --label-smoothing 0.1 ^
-  --no-progress-bar ^
-  --log-format simple ^
-  --log-interval 100
+#!/bin/bash
+
+# ======================= 配置部分 =======================
+noise_type=random_delete_shuffle
+model_args=""  # CPU 模式不能使用 --fp16
+architecture=pretrain_mlm_editretro #editretro_nat
+task=translation_retro
+criterion=nat_loss
+
+lr=0.00077
+update=1
+max_tokens=2048
+max_epoch=1
+max_update=180
+log_interval=10
+
+exp_n=finetune_cpu
+run_n=$(date "+%Y%m%d_%H%M%S")
+root_dir=results
+exp_dir=$root_dir/$exp_n
+mkdir -p $exp_dir
+
+model_dir=${exp_dir}/${run_n}/checkpoints
+mkdir -p ${model_dir}
+
+databin=D:/C/AI_Innovation_Practice/ZKD/Practice/Editretro_20250712/datasets/USPTO_50K/aug1/data-bin/USPTO_50K_aug1
+pretrain_ckpt_path=D:/C/AI_Innovation_Practice/ZKD/Practice/Editretro_20250712/results/pretrain_cpu/20250714_091131/checkpoints/checkpoint_best.pt
+pretrain_ckpt_name=${pretrain_ckpt_path}
+
+
+# 保存当前配置
+echo "run_n: $run_n" > $exp_dir/$run_n/config.log
+echo "databin: $databin" >> $exp_dir/$run_n/config.log
+echo "pretrain_ckpt: $pretrain_ckpt_name" >> $exp_dir/$run_n/config.log
+echo "lr: $lr, max_tokens: $max_tokens, max_update: $max_update, update_freq: $update" >> $exp_dir/$run_n/config.log
+cat $exp_dir/$run_n/config.log
+
+# ======================= 启动微调 =======================
+fairseq-train \
+  $databin \
+  --user-dir "D:/C/AI_Innovation_Practice/ZKD/Practice/Editretro_20250712/editretro" \
+  --save-dir $model_dir \
+  --task $task \
+  --criterion $criterion \
+  --arch $architecture \
+  --noise $noise_type \
+  --share-all-embeddings \
+  --optimizer adam --adam-betas '(0.9,0.98)' \
+  --lr $lr --lr-scheduler inverse_sqrt \
+  --warmup-updates 100 \
+  --warmup-init-lr '1e-07' --label-smoothing 0.1 \
+  --dropout 0.2 --weight-decay 0.01 \
+  --decoder-learned-pos --encoder-learned-pos \
+  --max-tokens-valid 1000 \
+  --log-format 'simple' --log-interval $log_interval \
+  --fixed-validation-seed 7 \
+  --max-tokens $max_tokens \
+  --max-update $max_update \
+  --max-epoch $max_epoch \
+  --keep-last-epochs 5 \
+  --seed 1 \
+  --restore-file ${pretrain_ckpt_name} \
+  --reset-optimizer --reset-lr-scheduler --reset-meters --reset-dataloader \
+  --pretrain \
+  ${model_args} > ${model_dir}/finetune.log 2>&1
 
 ```
 
-![微调效果图](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/2db8eff780e8012ba53784e68d12646f058cd9b6/Model_Fine_Tuning.png)
+![微调训练图](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/2db8eff780e8012ba53784e68d12646f058cd9b6/Model_Fine_Tuning.png)
 
 ----------
