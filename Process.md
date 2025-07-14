@@ -26,7 +26,7 @@ conda activate editretro
 进入项目根目录，并安装依赖项：
 
 ```bash
-cd D:\C\AI_Innovation_Practice\ZKD\Practice\yuqianghan-editretro-e954132
+cd D:\C\AI_Innovation_Practice\ZKD\Practice\Editretro_20250712
 pip install -r requirements.txt
 ```
 
@@ -93,7 +93,7 @@ set CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6
 进入 `fairseq` 子目录执行安装：
 
 ```bash
-cd D:\C\AI_Innovation_Practice\ZKD\Practice\yuqianghan-editretro-e954132\fairseq
+cd D:\C\AI_Innovation_Practice\ZKD\Practice\Editretro_20250712\Fairseq
 pip install --editable ./
 ```
 
@@ -136,7 +136,7 @@ UserWarning: Error checking compiler version for cl: [WinError 2] 系统找不�
 将数据放置于如下路径示例：
 
 ```
-D:\C\AI_Innovation_Practice\ZKD\Practice\yuqianghan-editretro-e954132\datasets\USPTO_50K\raw
+D:\C\AI_Innovation_Practice\ZKD\Practice\Editretro_20250712\datasets\USPTO_50K\raw
 ```
 
 ### 2. 运行数据预处理脚本
@@ -152,9 +152,9 @@ python preprocess_data.py -dataset USPTO_FULL -augmentation 5 -processes 8 -spe 
 预处理完成后，结果将保存至：
 
 ```
-datasets/USPTO_50K/aug1/
+D:\C\AI_Innovation_Practice\ZKD\Practice\Editretro_20250712\datasets\USPTO_50K\aug1
 
-datasets/USPTO_FULL/aug5/
+D:\C\AI_Innovation_Practice\ZKD\Practice\Editretro_20250712\datasets\USPTO_50K\aug5
 ```
 
 ### 3. 二值化数据
@@ -164,6 +164,19 @@ datasets/USPTO_FULL/aug5/
 ```bash
 sh binarize.sh ./datasets/USPTO_50K/aug1 dict.txt
 ```
+如果卡住不动，执行以下命令：
+```
+fairseq-preprocess ^
+  --source-lang src ^
+  --target-lang tgt ^
+  --trainpref D:\C\AI_Innovation_Practice\ZKD\Practice\Editretro_20250712\datasets\USPTO_50K\aug1\train ^
+  --validpref D:\C\AI_Innovation_Practice\ZKD\Practice\Editretro_20250712\datasets\USPTO_50K\aug1\val ^
+  --testpref D:\C\AI_Innovation_Practice\ZKD\Practice\Editretro_20250712\datasets\USPTO_50K\aug1\test ^
+  --destdir D:\C\AI_Innovation_Practice\ZKD\Practice\Editretro_20250712\datasets\USPTO_50K\aug1\data-bin\USPTO_50K_aug1 ^
+  --srcdict D:\C\AI_Innovation_Practice\ZKD\Practice\Editretro_20250712\preprocess\dict.txt ^
+  --tgtdict D:\C\AI_Innovation_Practice\ZKD\Practice\Editretro_20250712\preprocess\dict.txt ^
+  --workers 4
+```
 
 >  **提示：** Windows 默认不支持 `.sh` 脚本，建议使用 [Git Bash](https://git-scm.com/) 运行，或手动复制脚本内容在 PowerShell 中执行（主要包含 `fairseq-preprocess` 命令）。
 
@@ -172,8 +185,14 @@ sh binarize.sh ./datasets/USPTO_50K/aug1 dict.txt
 
 本项目包含 EditRetro 模型的预训练和微调流程。请确保你已准备好对应的数据集，并且当前路径位于项目根目录：
 
+项目根目录路径：
 ```
-D:\C\AI_Innovation_Practice\ZKD\Practice\yuqianghan-editretro-e954132\datasets\USPTO_50K\raw
+D:/C/AI_Innovation_Practice/ZKD/Practice/Editretro_20250712
+```
+
+数据二值化后的路径：
+```
+D:/C/AI_Innovation_Practice/ZKD/Practice/Editretro_20250712/datasets/USPTO_50K/aug1/data-bin/USPTO_50K_aug1
 ```
 
 ----------
@@ -185,44 +204,81 @@ D:\C\AI_Innovation_Practice\ZKD\Practice\yuqianghan-editretro-e954132\datasets\U
 执行预训练的命令：
 
 ```bash
-sh ./scripts/0_pretrain.sh
+bash ./scripts/0_pretrain.sh
 ```
 
 > **注意：** Windows 用户如果没有安装 Git Bash，需手动执行脚本内命令。
 
-或者你也可以直接使用 `fairseq-train` 命令：
+使用脚本前需注意当前目录：
+```bash
+set PYTHONPATH=D:/C/AI_Innovation_Practice/ZKD/Practice/Editretro_20250712
+```
 
 ```bash
-fairseq-train data-bin/USPTO_50K_aug1 ^
-  --user-dir D:/C/AI_Innovation_Practice/ZKD/Practice/yuqianghan-editretro-e954132/editretro ^
-  -s src -t tgt ^
-  --save-dir results/pretrain_20250709_cpu/checkpoints ^
-  --ddp-backend no_c10d ^
-  --task translation_pretrain ^
-  --criterion pretrain_nat_loss ^
-  --arch pretrain_mlm_editretro ^
-  --noise random_delete ^
-  --share-all-embeddings ^
-  --optimizer adam --adam-betas "(0.9,0.98)" ^
-  --lr 0.0005 --lr-scheduler inverse_sqrt ^
-  --warmup-updates 100 ^
-  --warmup-init-lr 1e-07 --label-smoothing 0.1 ^
-  --dropout 0.1 --weight-decay 0.01 ^
-  --decoder-learned-pos ^
-  --encoder-learned-pos ^
-  --update-freq 1 ^
-  --max-tokens-valid 512 ^
-  --distributed-world-size 1 ^
-  --log-format simple --log-interval 10 ^
-  --fixed-validation-seed 7 ^
-  --max-tokens 512 ^
-  --save-interval-updates 200 ^
-  --max-update 500 ^
-  --max-epoch 1 ^
-  --keep-last-epochs 1 ^
-  --seed 1 ^
-  --mask-prob 0.15 ^
-  --pretrain
+#!/bin/bash
+
+# 不用显卡训练（CPU-only）
+# 请确保使用 (base) 或激活了正确的 conda 环境
+# 在 shell 脚本中，即使在 Windows 上，也强烈建议使用正斜杠 / 作为路径分隔符，避免反斜杠 \ 被错误地转义。
+databin="D:/C/AI_Innovation_Practice/ZKD/Practice/Editretro_20250712/datasets/USPTO_50K/aug1/data-bin/USPTO_50K_aug1"
+
+
+noise_type=random_delete
+model_args=""  # CPU模式不能使用 --fp16
+architecture=pretrain_mlm_editretro
+task=translation_pretrain
+criterion=pretrain_nat_loss
+
+lr=0.0007
+update=4
+max_tokens=2048
+max_epoch=1
+max_update=180
+
+exp_n=pretrain_cpu
+root_dir=./results
+run_n=$(date "+%Y%m%d_%H%M%S")
+exp_dir=$root_dir/$exp_n
+mkdir -p $exp_dir
+
+model_dir=${exp_dir}/${run_n}/checkpoints
+mkdir -p ${model_dir}
+
+echo "run_n:$run_n, max_tokens:$max_tokens, databin=${databin}, noise_type=${noise_type}, architecture=${architecture}" > $exp_dir/$run_n/config.log
+cat $exp_dir/$run_n/config.log
+
+fairseq-train \
+    $databin   \
+    --user-dir editretro \
+    -s src \
+    -t tgt \
+    --save-dir ${model_dir}  \
+    --task ${task}  \
+    --criterion ${criterion} \
+    --arch ${architecture} \
+    --noise ${noise_type} \
+    --share-all-embeddings \
+    --optimizer adam --adam-betas '(0.9,0.98)' \
+    --lr $lr --lr-scheduler inverse_sqrt \
+    --warmup-updates 500 \
+    --warmup-init-lr '1e-07' --label-smoothing 0.1 \
+    --dropout 0.2 --weight-decay 0.01 \
+    --decoder-learned-pos \
+    --encoder-learned-pos \
+    --update-freq ${update} \
+    --max-tokens-valid 1000 \
+    --log-format 'simple' --log-interval 10 \
+    --fixed-validation-seed 7 \
+    --max-tokens ${max_tokens} \
+    --save-interval-updates 1000 \
+    --max-update ${max_update}  \
+    --max-epoch ${max_epoch} \
+    --keep-last-epochs 10 \
+    --seed 1 \
+    --mask-prob 0.15 \
+    --pretrain \
+    ${model_args} > ${model_dir}/pretrain.log 2>&1
+
 
 ```
 
