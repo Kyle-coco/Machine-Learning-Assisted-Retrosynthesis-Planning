@@ -282,7 +282,7 @@ fairseq-train \
 
 ```
 
-![预训练结果图]([[https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/2db8eff780e8012ba53784e68d12646f058cd9b6/Pre-training.png](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/main/result_photo/Pre-training.png)](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/5576662b50e79d536375b558d7d277b2b6c8af15/result_photo/Pre-training.png))
+![预训练结果图](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/main/result_photo/Pre-training.png)
 
 ----------
 
@@ -367,10 +367,10 @@ fairseq-train \
 
 ```
 我拿了微调三个不同阶段的训练结果，以此直观的展现了模型训练的好坏
-![微调训练结果图1]([https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/2db8eff780e8012ba53784e68d12646f058cd9b6/Model_Fine_Tuning.png](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/main/result_photo/Finetune3.png))
+![微调训练结果图1](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/5576662b50e79d536375b558d7d277b2b6c8af15/result_photo/Finetune3.png)
 
-![微调训练结果图2]([https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/2db8eff780e8012ba53784e68d12646f058cd9b6/Model_Fine_Tuning.png](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/main/result_photo/Finetune2.png))
+![微调训练结果图2](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/5576662b50e79d536375b558d7d277b2b6c8af15/result_photo/Finetune2.png)
 
-![微调训练结果图3]([https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/2db8eff780e8012ba53784e68d12646f058cd9b6/Model_Fine_Tuning.png](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/main/result_photo/Finetune.png))
+![微调训练结果图3](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/5576662b50e79d536375b558d7d277b2b6c8af15/result_photo/Finetune.png)
 
 ----------
