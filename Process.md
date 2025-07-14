@@ -1,11 +1,14 @@
 
+这个README整体内容清晰、结构完整，内容详细，很适合做项目的安装和使用说明。  
+我帮你调整一些格式细节和排版，让它更规范、阅读更顺畅，建议包括：
+
 ----------
 
 # EditRetro：逆合成预测模型安装与使用指南
 
 本项目基于论文 **EditRetro: Edit-Based Retrosynthesis Prediction with Documented Edit Sequences**，提出了一种结合模板优势和神经网络能力的逆合成预测方法，广泛用于化学反应路径预测任务。
 
- **代码来源：**  
+**代码来源：**  
 [https://zenodo.org/records/11483329](https://zenodo.org/records/11483329)
 
 ----------
@@ -19,6 +22,7 @@
 ```bash
 conda create -n editretro python=3.10.9
 conda activate editretro
+
 ```
 
 ### 2. 安装 Python 依赖
@@ -28,13 +32,14 @@ conda activate editretro
 ```bash
 cd D:\C\AI_Innovation_Practice\ZKD\Practice\Editretro_20250712
 pip install -r requirements.txt
+
 ```
 
 ----------
 
-###  `requirements.txt` 内容示例
+### `requirements.txt` 内容示例
 
-```
+```text
 --extra-index-url https://download.pytorch.org/whl/cu116
 numpy==1.23.5
 pandas==2.1.4
@@ -43,6 +48,7 @@ SmilesPE==0.0.3
 textdistance==4.6.0
 torch==1.12.0+cu116
 tensorboard==2.15.1
+
 ```
 
 ----------
@@ -66,12 +72,14 @@ Fairseq 编译依赖 Ninja：
 conda install ninja
 # 或
 pip install ninja
+
 ```
 
 测试是否安装成功：
 
 ```bash
 ninja -v
+
 ```
 
 ### 2. 设置 CUDA_HOME 环境变量（如使用 GPU）
@@ -80,12 +88,14 @@ ninja -v
 
 ```
 CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6
+
 ```
 
 或在命令行中临时设置：
 
 ```bash
 set CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6
+
 ```
 
 ### 3. 安装 Fairseq
@@ -95,6 +105,7 @@ set CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6
 ```bash
 cd D:\C\AI_Innovation_Practice\ZKD\Practice\Editretro_20250712\Fairseq
 pip install --editable ./
+
 ```
 
 ----------
@@ -107,11 +118,12 @@ pip install --editable ./
 
 ```
 UserWarning: Error checking compiler version for cl: [WinError 2] 系统找不到指定的文件。
+
 ```
 
 请安装 [Visual Studio Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) 并选择：
 
--    "使用 C++ 的桌面开发（Desktop development with C++）"
+-   "使用 C++ 的桌面开发（Desktop development with C++）"
     
 
 完成后重启命令行即可。
@@ -137,6 +149,7 @@ UserWarning: Error checking compiler version for cl: [WinError 2] 系统找不�
 
 ```
 D:\C\AI_Innovation_Practice\ZKD\Practice\Editretro_20250712\datasets\USPTO_50K\raw
+
 ```
 
 ### 2. 运行数据预处理脚本
@@ -147,14 +160,15 @@ D:\C\AI_Innovation_Practice\ZKD\Practice\Editretro_20250712\datasets\USPTO_50K\r
 python preprocess_data.py -dataset USPTO_50K -augmentation 1 -processes 4 -spe -dropout 0
 
 python preprocess_data.py -dataset USPTO_FULL -augmentation 5 -processes 8 -spe -dropout 0
+
 ```
 
 预处理完成后，结果将保存至：
 
 ```
 D:\C\AI_Innovation_Practice\ZKD\Practice\Editretro_20250712\datasets\USPTO_50K\aug1
-
 D:\C\AI_Innovation_Practice\ZKD\Practice\Editretro_20250712\datasets\USPTO_50K\aug5
+
 ```
 
 ### 3. 二值化数据
@@ -163,9 +177,12 @@ D:\C\AI_Innovation_Practice\ZKD\Practice\Editretro_20250712\datasets\USPTO_50K\a
 
 ```bash
 sh binarize.sh ./datasets/USPTO_50K/aug1 dict.txt
+
 ```
+
 如果卡住不动，执行以下命令：
-```
+
+```bash
 fairseq-preprocess ^
   --source-lang src ^
   --target-lang tgt ^
@@ -176,23 +193,29 @@ fairseq-preprocess ^
   --srcdict D:\C\AI_Innovation_Practice\ZKD\Practice\Editretro_20250712\preprocess\dict.txt ^
   --tgtdict D:\C\AI_Innovation_Practice\ZKD\Practice\Editretro_20250712\preprocess\dict.txt ^
   --workers 4
+
 ```
 
->  **提示：** Windows 默认不支持 `.sh` 脚本，建议使用 [Git Bash](https://git-scm.com/) 运行，或手动复制脚本内容在 PowerShell 中执行（主要包含 `fairseq-preprocess` 命令）。
+> **提示：** Windows 默认不支持 `.sh` 脚本，建议使用 [Git Bash](https://git-scm.com/) 运行，或手动复制脚本内容在 PowerShell 中执行（主要包含 `fairseq-preprocess` 命令）。
 
 ----------
+
 ## 五、模型训练
 
 本项目包含 EditRetro 模型的预训练和微调流程。请确保你已准备好对应的数据集，并且当前路径位于项目根目录：
 
 项目根目录路径：
+
 ```
 D:/C/AI_Innovation_Practice/ZKD/Practice/Editretro_20250712
+
 ```
 
 数据二值化后的路径：
+
 ```
 D:/C/AI_Innovation_Practice/ZKD/Practice/Editretro_20250712/datasets/USPTO_50K/aug1/data-bin/USPTO_50K_aug1
+
 ```
 
 ----------
@@ -205,13 +228,16 @@ D:/C/AI_Innovation_Practice/ZKD/Practice/Editretro_20250712/datasets/USPTO_50K/a
 
 ```bash
 bash ./scripts/0_pretrain.sh
+
 ```
 
 > **注意：** Windows 用户如果没有安装 Git Bash，需手动执行脚本内命令。
 
 使用脚本前需注意当前目录：
+
 ```bash
 set PYTHONPATH=D:/C/AI_Innovation_Practice/ZKD/Practice/Editretro_20250712
+
 ```
 
 ```bash
@@ -221,7 +247,6 @@ set PYTHONPATH=D:/C/AI_Innovation_Practice/ZKD/Practice/Editretro_20250712
 # 请确保使用 (base) 或激活了正确的 conda 环境
 # 在 shell 脚本中，即使在 Windows 上，也强烈建议使用正斜杠 / 作为路径分隔符，避免反斜杠 \ 被错误地转义。
 databin="D:/C/AI_Innovation_Practice/ZKD/Practice/Editretro_20250712/datasets/USPTO_50K/aug1/data-bin/USPTO_50K_aug1"
-
 
 noise_type=random_delete
 model_args=""  # CPU模式不能使用 --fp16
@@ -279,10 +304,9 @@ fairseq-train \
     --pretrain \
     ${model_args} > ${model_dir}/pretrain.log 2>&1
 
-
 ```
 
-![预训练结果图](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/main/result_photo/Pre-training.png)
+![预训练结果图] (https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/main/result_photo/Pre-training.png)
 
 ----------
 
@@ -294,6 +318,7 @@ fairseq-train \
 
 ```bash
 bash ./scripts/1_finetune.sh
+
 ```
 
 脚本命令如下：
@@ -327,7 +352,6 @@ mkdir -p ${model_dir}
 databin=D:/C/AI_Innovation_Practice/ZKD/Practice/Editretro_20250712/datasets/USPTO_50K/aug1/data-bin/USPTO_50K_aug1
 pretrain_ckpt_path=D:/C/AI_Innovation_Practice/ZKD/Practice/Editretro_20250712/results/pretrain_cpu/20250714_091131/checkpoints/checkpoint_best.pt
 pretrain_ckpt_name=${pretrain_ckpt_path}
-
 
 # 保存当前配置
 echo "run_n: $run_n" > $exp_dir/$run_n/config.log
@@ -366,11 +390,13 @@ fairseq-train \
   ${model_args} > ${model_dir}/finetune.log 2>&1
 
 ```
-我拿了微调三个不同阶段的训练结果，以此直观的展现了模型训练的好坏
-![微调训练结果图1](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/5576662b50e79d536375b558d7d277b2b6c8af15/result_photo/Finetune3.png)
 
-![微调训练结果图2](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/5576662b50e79d536375b558d7d277b2b6c8af15/result_photo/Finetune2.png)
+下面是微调不同阶段训练结果的示意图：
 
-![微调训练结果图3](https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/5576662b50e79d536375b558d7d277b2b6c8af15/result_photo/Finetune.png)
+![微调训练结果图1] (https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/5576662b50e79d536375b558d7d277b2b6c8af15/result_photo/Finetune3.png)
+
+![微调训练结果图2] (https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/5576662b50e79d536375b558d7d277b2b6c8af15/result_photo/Finetune2.png)
+
+![微调训练结果图3] (https://github.com/Kyle-coco/Machine-Learning-Assisted-Retrosynthesis-Planning/blob/5576662b50e79d536375b558d7d277b2b6c8af15/result_photo/Finetune.png)
 
 ----------
